@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:login_screen_app/Model/usefulData.dart';
 import 'package:login_screen_app/pages/cart_page.dart';
@@ -90,19 +91,68 @@ class _SingleProductPageState extends State<SingleProductPage> {
           color: Colors.orangeAccent,
           child: Text('Add to Cart'),
           onPressed: () {
-           // print('cartdata'+cartData.toString());
-           // print('cartdocs:'+cartDocs[0].toString());
-              cartDocs.add(listOfDocumentsq[widget.index]);
+            // print('cartdata'+cartData.toString());
+            // print('cartdocs:'+cartDocs[0].toString());
+            cartDocs.add(listOfDocumentsq[widget.index]);
+            Map<dynamic, dynamic> other = {};
+            Map<String, dynamic> cart = {};
+            documentReference.get().then((v) {
+              Map<String, dynamic> d = v.data;
+
+              cart = {
+                'cart': {listOfDocumentsq[widget.index].documentID: 1}
+              };
+              print('cart is' + cart.toString());
+              if (d.containsKey('cart')) {
+                print('contains key cart');
+                if (d['cart'] != null) {
+                  // other.addAll({listOfDocumentsq[widget.index].documentID: 1});
+                  other = d['cart'];
+                  print('cart is not null');
+                  print(other);
+                  other.addAll(cart['cart']);
+                  // Map<String, dynamic> oth1 = other['cart'];
+                  Map<String, dynamic> oth2 = {'cart': other};
+                  print(oth2);
+                  documentReference.updateData(oth2).then((v) {
+                    print('success added 1');
+                  });
+                } else {
+                  documentReference.updateData(cart['cart']).then((v) {
+                    print('success added 2');
+                  });
+                }
+              } else
+                documentReference.updateData(cart).then((v) {
+                  print('success added 3');
+                });
+
+              //  Map<dynamic,dynamic> o = {
+              //   'cart': {listOfDocumentsq[widget.index].documentID: 1}
+              // };
+            });
+
+            // Firestore.instance
+            //     .collection('users')
+            //     .document('$userId')
+            //     .collection('cart')
+            //     .document()
+            //     .setData(data)
+            //     .then((_) {
+            //   print('added data');
+            // });
+            // print('id is' + doc.documentID);
+            //  print('col is'+col.toString());
             // showDialog()
-            if (cartData[cartUId] != null)
-              {cartData[cartUId].add(listOfDocumentsq[widget.index].documentID);
-              }
-            else
-              cartData[cartUId] = [listOfDocumentsq[widget.index].documentID];
-            print('cartdata'+cartData.toString());
-            print('cartdocs:'+cartDocs.toString());
+            // if (cartData[cartUId] != null)
+            //   {cartData[cartUId].add(listOfDocumentsq[widget.index].documentID);
+            //   }
+            // else
+            //   cartData[cartUId] = [listOfDocumentsq[widget.index].documentID];
+            // print('cartdata'+cartData.toString());
+            print('cartdocs:' + cartDocs.toString());
             //listOfDocumentsq[widget.index].documentID;
-            
+
             showBar('Added successfully');
             print('added to cart');
           },

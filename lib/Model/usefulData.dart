@@ -29,7 +29,7 @@ String prevShopId;
 
 //To add product into cart we need to get userId as well as productid so we keep track 
 //of userId that product belongs to.map of userid and list of productids
-Map<String,List<String>> cartData={};
+//Map<String,List<String>> cartData={};
 String cartUId;
 String currentDocId;
 Future<DocumentSnapshot> qsCart;

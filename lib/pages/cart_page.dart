@@ -29,6 +29,19 @@ class _CartPageState extends State<CartPage> {
 
     //   });
     // });
+  //  documentReference.get().then((ds){
+  //    Map<String,dynamic> map=ds.data;
+     
+  //    if(map['cart'].isNotEmpty){
+  //      print(map['cart']);
+  //      List<String> ls=map['cart'].keys;
+  //      print(ls);
+  //      ls.forEach((f){
+  //         print('doc id is'+f.toString());
+          
+  //      });
+  //    }
+  //  });
     cartDocs.forEach((f) {
       cartProdData.add(f.data);
     });

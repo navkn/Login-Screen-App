@@ -18,7 +18,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   // void initState() {
-  //   
+  //
   //   super.initState();
   // }
 
@@ -90,9 +90,21 @@ class _SingleProductPageState extends State<SingleProductPage> {
           color: Colors.orangeAccent,
           child: Text('Add to Cart'),
           onPressed: () {
+           // print('cartdata'+cartData.toString());
+           // print('cartdocs:'+cartDocs[0].toString());
+              cartDocs.add(listOfDocumentsq[widget.index]);
+            // showDialog()
+            if (cartData[cartUId] != null)
+              {cartData[cartUId].add(listOfDocumentsq[widget.index].documentID);
+              }
+            else
+              cartData[cartUId] = [listOfDocumentsq[widget.index].documentID];
+            print('cartdata'+cartData.toString());
+            print('cartdocs:'+cartDocs.toString());
+            //listOfDocumentsq[widget.index].documentID;
+            
+            showBar('Added successfully');
             print('added to cart');
-           // showDialog()
-           showBar('Added successfully');
           },
         ),
       ),
@@ -119,12 +131,14 @@ class _SingleProductPageState extends State<SingleProductPage> {
           }),
     );
   }
-void showBar(String str) {
+
+  void showBar(String str) {
     SnackBar snackbar = new SnackBar(
       content: new Text(str),
     );
     scaffoldKey.currentState.showSnackBar(snackbar);
   }
+
   Widget hero() {
     return Container(
       height: (MediaQuery.of(context).size.height -
@@ -205,7 +219,7 @@ void showBar(String str) {
           Card(
             elevation: 5,
             color: Colors.lightGreenAccent,
-                      child: Text(
+            child: Text(
               '₹' + listMapq[widget.index]['price'],
               style: TextStyle(fontSize: 28),
             ),
@@ -223,7 +237,6 @@ void showBar(String str) {
       margin: EdgeInsets.only(top: 10),
       //padding: EdgeInsets.only(bottom: 50),
       child: Column(
-        
         children: <Widget>[
           Text(
             'Description',

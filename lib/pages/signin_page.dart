@@ -39,7 +39,7 @@ class _SignInPageState extends State<SignInPage>
 
     _iconAnimation.addListener(() => this.setState(() {}));
     _iconAnimationController.forward();
-    print('sig '+currentProfile.toString());
+    print('sig ' + currentProfile.toString());
   }
 
   @override
@@ -118,7 +118,8 @@ class _SignInPageState extends State<SignInPage>
             //  Row(
             //  children: <Widget>[
             showUserSignUpFormButton(),
-            showForgotPassword()
+            showForgotPassword(),
+            showResendEmailLink()
             //  ],
             // ),
           ],
@@ -429,6 +430,35 @@ class _SignInPageState extends State<SignInPage>
             formKey1.currentState.save();
             try {
               await widget.auth.sendPasswordResetEmail(_email);
+              //.then((_) {
+              showBar('Password reset link has been sent to your email');
+              // });
+            } on PlatformException catch (e) {
+              if (e.code == 'ERROR_INVALID_EMAIL') showBar('INVALID_EMAIL');
+              if (e.code == 'ERROR_USER_NOT_FOUND') showBar('Account invalid');
+            } catch (e) {
+              print(e.toString());
+            }
+          } else {
+            formKey1.currentState.validate();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget showResendEmailLink() {
+    return Container(
+      // margin: EdgeInsets.only(top: 10),
+      child: new FlatButton(
+        child: new Text('Resend Email Verification',
+            style: TextStyle(color: Colors.teal, fontSize: 14)),
+        onPressed: () async {
+          //sendPasswordResetEmail()
+          if (formKey1.currentState.validate()) {
+            formKey1.currentState.save();
+            try {
+              await widget.auth.sendVerificationEmail();
               //.then((_) {
               showBar('Password reset link has been sent to your email');
               // });

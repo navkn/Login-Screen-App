@@ -59,6 +59,12 @@ class _ProdTile extends State<ProdTile> {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
           print(140);
+          // listOfDocumentsq.forEach((f) {
+          //   print('doc ids:'+f.documentID);
+          // });
+          print("doc id is:" + listOfDocumentsq[widget.index].documentID);
+          print('uid:'+cartUId);
+         
           return SingleProductPage(widget.index);
         }));
       },
@@ -70,7 +76,7 @@ class _ProdTile extends State<ProdTile> {
           ),
         ),
         Text(listMapq[widget.index]['title']),
-        Text('₹'+listMapq[widget.index]['price']),
+        Text('₹' + listMapq[widget.index]['price']),
       ]),
     );
   }

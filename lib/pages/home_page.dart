@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     fetchNearbyStores();
     //_height = MediaQuery.of(context).size.height - kToolbarHeight;
     // print('home ' + currentProfile.toString());
-    pincodeController.text='600119';
+    pincodeController.text = '600119';
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print('height:' +
           (MediaQuery.of(context).size.height - kToolbarHeight).toString());
@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                           child: TextFormField(
                             maxLength: 10,
                             autovalidate: true,
-                           // initialValue: '600119',
+                            // initialValue: '600119',
                             decoration: InputDecoration(labelText: 'PinCode'),
                             keyboardType: TextInputType.phone,
                             validator: (val) {
@@ -339,7 +339,7 @@ class _HomePageState extends State<HomePage> {
       dsnap = pincodesReference.get();
       dsnap.then((v) {
         shops = v.data;
-        print(shops);
+        print('shops:'+shops.toString());
       });
     }
   }
@@ -477,6 +477,7 @@ class _HomePageState extends State<HomePage> {
       MaterialPageRoute(builder: (BuildContext context) {
         print('inside home page entering into profilepage ' +
             userData.toString());
+        cartUId = listOfId;
         return DisplayShop(listOfId);
       }),
     );

@@ -12,12 +12,12 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
- // final scaffoldkey = GlobalKey<ScaffoldState>();
+  // final scaffoldkey = GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
   String st = 'hello';
-  CollectionReference _collectionReference;
-
+  DocumentReference _doc;
+  bool enable = true;
   @override
   void initState() {
     super.initState();
@@ -29,24 +29,60 @@ class _CartPageState extends State<CartPage> {
 
     //   });
     // });
-  //  documentReference.get().then((ds){
-  //    Map<String,dynamic> map=ds.data;
-     
-  //    if(map['cart'].isNotEmpty){
-  //      print(map['cart']);
-  //      List<String> ls=map['cart'].keys;
-  //      print(ls);
-  //      ls.forEach((f){
-  //         print('doc id is'+f.toString());
-          
-  //      });
-  //    }
-  //  });
-    cartDocs.forEach((f) {
-      cartProdData.add(f.data);
-    });
+    //  documentReference.get().then((ds){
+    //    Map<String,dynamic> map=ds.data;
+
+    //    if(map['cart'].isNotEmpty){
+    //      print(map['cart']);
+    //      List<String> ls=map['cart'].keys;
+    //      print(ls);
+    //      ls.forEach((f){
+    //         print('doc id is'+f.toString());
+
+    //      });
+    //    }
+    //  });
+    print('len is ' + cartDocs.length.toString());
+    if (cartDocs.length == 0) {
+      print('cart data is' + userData['cart'].toString());
+      print(userData['cart'].runtimeType);
+
+      Map<dynamic, dynamic> l1 = userData['cart'];
+      print(l1.toString());
+      Iterable<dynamic> k = l1.keys;
+      List<dynamic> keys = k.toList();
+      for (var i = 0; i < keys.length; i++) {
+        //print(l1[keys[i].toString()]);
+        String u = keys[i].substring(0, 28);
+        String d = keys[i].substring(29, 49);
+        print(u + "-" + d);
+        _doc = Firestore.instance.document('/users/' + u + '/products/' + d);
+        _doc.get().then((v) {
+          cartDocs.add(v);
+          cartProdData.add(v.data);
+          if (i >= keys.length - 1) {
+            setState(() {
+              enable = false;
+            });
+          }
+        });
+      }
+    } else {
+      setState(() {
+        enable = false;
+      });
+      print('no docs present');
+    }
+    // Future.forEach(l1.entries, (mapEntry){
+
+    // });
+
+    // cartDocs.forEach((f) {
+    //   cartProdData.add(f.data);
+    // });
     print("cartDocs:" + cartDocs.toString());
     print("cartProdData:" + cartProdData.toString());
+
     // _collectionReference =
     //     Firestore.instance.collection('/users/' + userId + '/products');
 //     if (querySnapshot == null)
@@ -59,31 +95,31 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    //  key: scaffoldkey,
+      //  key: scaffoldkey,
       appBar: AppBar(
         title: Text('Shopping cart'),
       ),
-      body: 
-      // RefreshIndicator(
-      //     key: _refreshIndicatorKey,
-      //     onRefresh: refreshPage,
-      //     child:
-           ListView.builder(
-              itemCount: cartDocs.length,
-              itemBuilder: (BuildContext context, int index) {
-                return
-        //          Card(
-        //   child: ListTile(
-        //     title: Text(cartProdData[index]['title']),
-        //      subtitle: Text('₹' + cartProdData[index]['price']),
-        //     // onTap: () {
-        //     //   getShop(listOfIds[index]);
-        //     // },
-        //   ),
-        // );
-                //Text('hii');
-                 CartProdTile(index);
-              })
+      body: RefreshIndicator(
+          key: _refreshIndicatorKey,
+          onRefresh: refreshPage,
+          child: enable == true
+              ? Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  itemCount: cartDocs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return
+                        //          Card(
+                        //   child: ListTile(
+                        //     title: Text(cartProdData[index]['title']),
+                        //      subtitle: Text('₹' + cartProdData[index]['price']),
+                        //     // onTap: () {
+                        //     //   getShop(listOfIds[index]);
+                        //     // },
+                        //   ),
+                        // );
+                        //Text('hii');
+                        CartProdTile(index);
+                  })
           // FutureBuilder(
           //   future: querySnapshot,
           //   builder: (BuildContext buildContext, AsyncSnapshot snapshot) {
@@ -97,7 +133,7 @@ class _CartPageState extends State<CartPage> {
           //       return somethingWentWrong();
           //   },
           // ),
-          // ),
+          ),
     );
     // onRefresh: () {
     //   setState(() {
@@ -111,46 +147,63 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> refreshPage() {
-    querySnapshot = _collectionReference.getDocuments();
-    return querySnapshot.then((v) {
-      setState(() {
-        firstInstance = false;
-        listMap = List();
-        mapOfImages = {};
-        indexes = List();
-      });
-    }).catchError((e) {
-      print(e);
+    // querySnapshot = _collectionReference.getDocuments();
+    // return querySnapshot.then((v) {
+    //   setState(() {
+    //     firstInstance = false;
+    //     listMap = List();
+    //     mapOfImages = {};
+    //     indexes = List();
+    //   });
+    // }).catchError((e) {
+    //   print(e);
+    // });
+    setState(() {
+      enable = true;
     });
-  }
-
-  Widget showData(QuerySnapshot data) {
-    //  Uint8List imagefile;
-    if (firstInstance == false) {
-      firstInstance = true;
-      listOfDocuments = data.documents;
-      print(listOfDocuments);
-      for (var doc in listOfDocuments) {
-        listMap.add(doc.data);
-        // for (var key in map.keys) {
-        //   listMap.add(map[key]);
-        // }
+    cartDocs = List();
+    cartProdData = List();
+    cartImages = {};
+    cartItemIndexes = List();
+    print('len is ' + cartDocs.length.toString());
+    //
+    //  print('cart data is' + userData['cart'].toString());
+    //  print(userData['cart'].runtimeType);
+   return documentReference.get().then((DocumentSnapshot ds) {
+      print('entering into profilepage ' + ds.data.toString());
+      ds.data.forEach((key, value) {
+        userData[key] = value;
+      });
+      print('out from profile page');
+      Map<dynamic, dynamic> l1 = userData['cart'];
+      print(l1.toString());
+      Iterable<dynamic> k = l1.keys;
+      List<dynamic> keys = k.toList();
+      for (var i = 0; i < keys.length; i++) {
+        //print(l1[keys[i].toString()]);
+        String u = keys[i].substring(0, 28);
+        String d = keys[i].substring(29, 49);
+        print(u + "-" + d);
+        _doc = Firestore.instance.document('/users/' + u + '/products/' + d);
+        _doc.get().then((v) {
+          cartDocs.add(v);
+          cartProdData.add(v.data);
+          if (i >= keys.length - 1) {
+            setState(() {
+              enable = false;
+            });
+          }
+        });
       }
-    }
-    print(listMap);
 
-    //  print(ls.toString());
-    return GridView.builder(
-      itemCount: listMap.length,
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount:
-            (MediaQuery.of(context).orientation == Orientation.portrait)
-                ? 2
-                : 3,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return ProductGridTile(index);
-      },
-    );
+      
+    });
+    // } else {
+    //   setState(() {
+    //     enable = false;
+    //   });
+    //   print('no docs present');
+    // }
   }
+
 }

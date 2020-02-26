@@ -6,8 +6,8 @@ import 'package:login_screen_app/Model/usefulData.dart';
 
 class ProductGridTile extends StatefulWidget {
   final int index;
-
-  ProductGridTile(this.index);
+  final Function showDialogueBox;
+  ProductGridTile(this.index, this.showDialogueBox);
   @override
   _ProductGridTileState createState() => _ProductGridTileState();
 }
@@ -35,16 +35,30 @@ class _ProductGridTileState extends State<ProductGridTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Expanded(
-        child: Card(
-          color: Colors.grey,
-          child: decideImage(),
-        ),
-      ),
-      Text(listMap[widget.index]['title']),
-      Text('₹'+listMap[widget.index]['price']),
-    ]);
+    return Stack(
+      children: [
+        Column(children: [
+          Expanded(
+            child: Card(
+              color: Colors.grey,
+              child: decideImage(),
+            ),
+          ),
+          Text(listMap[widget.index]['title']),
+          Text('₹' + listMap[widget.index]['price']),
+        ]),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: InkResponse(
+            child: Icon(Icons.delete),
+            onTap: () {
+              widget.showDialogueBox(widget.index);
+            },
+          ),
+        )
+      ],
+    );
   }
 
   void getImage(int index, String url) {

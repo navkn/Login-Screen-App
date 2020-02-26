@@ -63,11 +63,16 @@ class _ProdTile extends State<ProdTile> {
           //   print('doc ids:'+f.documentID);
           // });
           print("doc id is:" + listOfDocumentsq[widget.index].documentID);
-          print('uid:'+cartUId);
-         
+          print('uid:' + cartUId);
+
           return SingleProductPage(widget.index);
         }));
       },
+      // child: Stack(
+      //   //fit: StackFit.values[StackFit.],
+      //  // alignment: AlignmentGeometry.lerp(a, b, t),
+      //  //overflow: Overflow.values,
+      //   children: [
       child: Column(children: [
         Expanded(
           child: Card(
@@ -78,6 +83,9 @@ class _ProdTile extends State<ProdTile> {
         Text(listMapq[widget.index]['title']),
         Text('₹' + listMapq[widget.index]['price']),
       ]),
+      //Icon(Icons.delete),
+      //],
+      //  ),
     );
   }
 

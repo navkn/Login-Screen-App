@@ -275,11 +275,9 @@ class _ProfilePageState extends State<ProfilePage> {
     //     showBar('business updated successfully');
     //     }
 
-
     //   });
 
     // });
-
 
     //
     try {
@@ -366,6 +364,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             TextFormField(
               decoration: InputDecoration(labelText: 'Category'),
+              readOnly: userData['category'] != "" ? true : false,
               validator: (val) => val == null ? 'cannot be empty' : null,
               onSaved: (val) => category = val,
               initialValue: userData['category'],
@@ -376,6 +375,7 @@ class _ProfilePageState extends State<ProfilePage> {
             TextFormField(
               decoration: InputDecoration(labelText: 'Business Name'),
               validator: (val) => val == null ? 'cannot be empty' : null,
+              readOnly: userData['businessName'] != "" ? true : false,
               onSaved: (val) => businessName = val,
               initialValue: userData['businessName'],
               onChanged: (_) {
@@ -386,6 +386,7 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: InputDecoration(labelText: 'Address'),
               validator: (val) => val == null ? 'cannot be empty' : null,
               onSaved: (val) => address = val,
+              readOnly: userData['address'] != "" ? true : false,
               initialValue: userData['address'],
               onChanged: (_) {
                 addr = true;
@@ -396,6 +397,7 @@ class _ProfilePageState extends State<ProfilePage> {
               validator: (val) => val == null ? 'cannot be empty' : null,
               onSaved: (val) => pincode = val,
               keyboardType: TextInputType.phone,
+              readOnly: userData['pincode'] != "" ? true : false,
               initialValue: userData['pincode'],
               onChanged: (_) {
                 pin = true;

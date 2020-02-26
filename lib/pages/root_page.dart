@@ -47,7 +47,7 @@ class _RootPage extends State<RootPage> {
         return waitingScreen();
         break;
       case AuthStatus.LOGGED_IN:
-        return HomePage( logoutCallback);
+        return HomePage(logoutCallback);
         break;
       case AuthStatus.LOGGED_OUT:
         return SignInPage(widget.auth, loginCallback, logoutCallback);
@@ -86,11 +86,42 @@ class _RootPage extends State<RootPage> {
   void logoutCallback() async {
     // print(widget.auth.getCurrentUser());
     await widget.auth.signOut();
-    userId = null;
-    firebaseUser = null;
-    documentReference = null;
+    clearUsefulData();
     setState(() {
       _authStatus = AuthStatus.LOGGED_OUT;
     });
+  }
+
+  void clearUsefulData() {
+    userId = null;
+    firebaseUser = null;
+    documentReference = null;
+    currentProfile = false;
+    documentReference = null;
+    pincodesReference = null;
+    documentSnapshot = null;
+    userData = {};
+    cartProducts = List();
+    listMap = List();
+    listOfDocuments = List();
+    querySnapshot = null;
+    firstInstance = false;
+    mapOfImages = {};
+    indexes = List();
+    listMapq = List();
+    listOfDocumentsq = List();
+    querySnapshotq = null;
+    firstInstanceq = false;
+    mapOfImagesq = {};
+    indexesq = List();
+    prevShopId = null;
+    cartUId = null;
+    currentDocId = null;
+    qsCart = null;
+    cartProdData = List();
+    cartImages = {};
+    cartItemIndexes = List();
+    qty = List();
+    cartDocs = List();
   }
 }

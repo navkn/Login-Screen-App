@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:login_screen_app/Model/usefulData.dart';
 import 'package:login_screen_app/pages/cart_page.dart';
@@ -93,14 +92,18 @@ class _SingleProductPageState extends State<SingleProductPage> {
           onPressed: () {
             // print('cartdata'+cartData.toString());
             // print('cartdocs:'+cartDocs[0].toString());
-            cartDocs.add(listOfDocumentsq[widget.index]);
+           // cartDocs.add(listOfDocumentsq[widget.index]);
             Map<dynamic, dynamic> other = {};
             Map<String, dynamic> cart = {};
             documentReference.get().then((v) {
               Map<String, dynamic> d = v.data;
 
               cart = {
-                'cart': {listOfDocumentsq[widget.index].documentID: 1}
+                'cart': {
+                  listOfDocumentsq[widget.index].data['shopId'].toString() +
+                      '-' +
+                      listOfDocumentsq[widget.index].documentID: 1
+                }
               };
               print('cart is' + cart.toString());
               if (d.containsKey('cart')) {

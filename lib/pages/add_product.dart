@@ -27,8 +27,9 @@ class _AddProductState extends State<AddProduct> {
   Future<DocumentReference> documentReference;
   String title, description, category, price, quantity;
   File _image;
-  String extension;
-  bool enable;
+  String extension, barResult;
+
+
   // TextEditingController addressController = TextEditingController();
   // TextEditingController pincodeController = TextEditingController();
   @override
@@ -43,7 +44,8 @@ class _AddProductState extends State<AddProduct> {
     priceController.text = '';
     quantityController.text = '1';
     url = null;
-    enable = true;
+   
+    //barResult='hello this is a normal message';
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   setState(() {
     //     //  urlController.text
@@ -82,9 +84,7 @@ class _AddProductState extends State<AddProduct> {
       appBar: AppBar(
         title: Text('New Product'),
       ),
-      body: enable != true
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body:  SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(30),
                 child: Form(
@@ -195,16 +195,31 @@ class _AddProductState extends State<AddProduct> {
                           RaisedButton(
                             child: Text('Add'),
                             // disabledColor: Colors.grey,
-                            color: enable == true ? Colors.green : Colors.grey,
+                            color: Colors.green ,
                             //color: Colors.grey,
-                            onPressed: enable == true
-                                ? () {
-                                    addProduct();
-                                    setState(() {
-                                      enable = true;
-                                    });
+                            onPressed: () async {
+                                    // setState(() {
+                                    //   enable = true;
+                                    // });
+                                   
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return Scaffold(
+                                          appBar: AppBar(),
+                                          body: Center(
+                                              child:
+                                                  CircularProgressIndicator()));
+                                    }));
+                                    await addProduct();
+                                    // setState(() {
+                                    //   enable = false;
+                                    // });
+                                    Navigator.of(context).pop();
+                                    await showDiagolueBox(barResult);
+
+                                    Navigator.of(context).pop(true);
                                   }
-                                : null,
+                               
                           ),
                         ],
                       )
@@ -214,6 +229,47 @@ class _AddProductState extends State<AddProduct> {
               ),
             ),
     );
+  }
+
+  Future<void> showDiagolueBox(String res) {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0)), //this right here
+      child: Container(
+        height: 200.0,
+        width: 300.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text(
+                res,
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+            // Padding(
+            //   padding: EdgeInsets.all(15.0),
+            //   child: Text(
+            //     'Awesome',
+            //     style: TextStyle(color: Colors.red),
+            //   ),
+            // ),
+            Padding(padding: EdgeInsets.only(top: 20.0)),
+            FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Got It!',
+                  style: TextStyle(color: Colors.red, fontSize: 18.0),
+                ))
+          ],
+        ),
+      ),
+    );
+    return showDialog(
+        context: context, builder: (BuildContext context) => errorDialog);
   }
 
   void getImage() async {
@@ -249,30 +305,31 @@ class _AddProductState extends State<AddProduct> {
     }
   }
 
-  void showBar(String str) {
+  Future<void> showBar(String str) {
     SnackBar snackbar = new SnackBar(
       content: new Text(str),
+      duration: Duration(seconds: 2),
     );
-    scaffoldKey.currentState.showSnackBar(snackbar);
+    return scaffoldKey.currentState.showSnackBar(snackbar).closed;
   }
 
-  void addProduct() async {
+  Future<void> addProduct() async {
     Map<String, dynamic> other;
     if (!formKey.currentState.validate()) {
       print('incorrect or fields are empty');
-      showBar('invalid fields');
+      //showBar('invalid fields');
+      barResult = 'invalid fields';
       return;
     }
     formKey.currentState.save();
-    setState(() {
-      enable = false;
-    });
+   
     try {
       await uploadImage();
       print('pic uploading');
     } catch (e) {
       print(e);
-      showBar('pic upload network error');
+      //  showBar('pic upload network error');
+      barResult = 'pic upload network error';
       return;
     }
 
@@ -294,7 +351,10 @@ class _AddProductState extends State<AddProduct> {
       // }
       // print('299 ' + other.toString());
     } catch (e) {
-      print('got error from here');
+      print('got error while creating document');
+      //showBar('unable to add');
+      barResult = 'unable to add';
+      return;
     }
     Map<String, dynamic> data = {
       'title': title,
@@ -303,7 +363,8 @@ class _AddProductState extends State<AddProduct> {
       'quantity': quantity,
       'images': url,
       'category': category,
-      'id': docId
+      'id': docId,
+      'shopId': userId
     };
 
     // Firestore.instance
@@ -335,8 +396,9 @@ class _AddProductState extends State<AddProduct> {
           .setData(data);
       print('added product');
     } catch (e) {
-      print('not added');
-      showBar('not added');
+      print('product not added');
+      // showBar('product not added');
+      barResult = 'product not added';
       return;
     }
 //getting list of categories and adding a new one
@@ -369,7 +431,10 @@ class _AddProductState extends State<AddProduct> {
       // }
       other['keywords'] = l;
     } catch (e) {
-      print('error catched' + e.toString());
+      print('error while merging a new category locally' + e.toString());
+      // showBar('unable to add');
+      barResult = 'unable to add';
+      return;
     }
 //updating category list
     try {
@@ -380,11 +445,13 @@ class _AddProductState extends State<AddProduct> {
 
       print('successfully updated');
       userData = other;
-      showBar('added successfully');
-      Navigator.of(context).pop(true);
+      // showBar('added successfully');
+      barResult = 'added successfully';
+      return;
     } catch (e) {
       print('error while updating category ' + e.toString());
-      showBar('unable to add');
+      //  showBar('unable to add');
+      barResult = 'unable to add';
       return;
     }
   }

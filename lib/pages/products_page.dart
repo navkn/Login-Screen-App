@@ -16,7 +16,7 @@ class _ProductsPageState extends State<ProductsPage> {
   CollectionReference _collectionReference;
 
   int height;
-  final scaffoldkey = GlobalKey<ScaffoldState>();
+  final _scaffoldkey = GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
   @override
@@ -34,7 +34,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldkey,
+      key: _scaffoldkey,
       appBar: AppBar(
         title: Text('Products'),
       ),
@@ -59,9 +59,8 @@ class _ProductsPageState extends State<ProductsPage> {
         onPressed: () => {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return AddProduct();
-          })).then((v){
-            if(v==true)refreshPage();
-
+          })).then((v) {
+            if (v == true) refreshPage();
           })
         },
         child: Icon(Icons.add),
@@ -81,13 +80,13 @@ class _ProductsPageState extends State<ProductsPage> {
       listOfDocuments = data.documents;
       print(listOfDocuments);
       for (var doc in listOfDocuments) {
-         listMap.add(doc.data);
+        listMap.add(doc.data);
         // for (var key in map.keys) {
         //   listMap.add(map[key]);
         // }
       }
     }
-      print(listMap);
+    print(listMap);
 
     //  print(ls.toString());
     return GridView.builder(
@@ -99,10 +98,84 @@ class _ProductsPageState extends State<ProductsPage> {
                 : 3,
       ),
       itemBuilder: (BuildContext context, int index) {
-        return ProductGridTile(index);
+        return ProductGridTile(index, showDiagolueBox);
       },
     );
   }
+
+  Future<void> showDiagolueBox(int index) {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0)), //this right here
+      child: Container(
+        height: 200.0,
+        width: 300.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text(
+                'Do you want to delete this item?',
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+            // Padding(
+            //   padding: EdgeInsets.all(15.0),
+            //   child: Text(
+            //     'Awesome',
+            //     style: TextStyle(color: Colors.red),
+            //   ),
+            // ),
+            Padding(padding: EdgeInsets.only(top: 20.0)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.red, fontSize: 18.0),
+                    )),
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      print(listMap[index]);
+                      Firestore.instance
+                          .document('/users/' +
+                              userId +
+                              '/products/' +
+                              listMap[index]['id'].toString())
+                          .delete().then((_){
+                            print('deleted successfully');
+                            refreshPage();
+                            showBar('deleted successfully');
+                          });
+                    },
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red, fontSize: 18.0),
+                    )),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+    return showDialog(
+        context: context, builder: (BuildContext context) => errorDialog);
+  }
+
+ Future<void> showBar(String str) {
+    SnackBar snackbar = new SnackBar(
+      content: new Text(str),
+      duration: Duration(seconds: 2),
+    );
+    return _scaffoldkey.currentState.showSnackBar(snackbar).closed;
+  }
+
 
   Future<void> refreshPage() {
     querySnapshot = _collectionReference.getDocuments();

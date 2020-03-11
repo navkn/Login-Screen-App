@@ -365,6 +365,7 @@ class _AddProductState extends State<AddProduct> {
       'category': category,
       'id': docId,
       'shopId': userId
+      
     };
 
     // Firestore.instance

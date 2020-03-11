@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_screen_app/Model/usefulData.dart';
-
 
 class CartProdTile extends StatefulWidget {
   final int index;
@@ -15,14 +15,15 @@ class CartProdTile extends StatefulWidget {
 
 class _CartProdTile extends State<CartProdTile> {
   Uint8List imageFile;
-  //int quantity;
+  int quantity;
   @override
   void initState() {
     super.initState();
     imageFile = null;
-    //quantity=0;
-   // qty[widget.index]=0;
-   // print('ond:'+qty.elementAt(widget.index));
+    quantity = qty[widget.index];
+    print('quantity is' + quantity.toString());
+    // qty[widget.index]=0;
+    // print('ond:'+qty.elementAt(widget.index));
     print('init state');
     // print(indexes);
     // print(listMap);
@@ -150,14 +151,63 @@ class _CartProdTile extends State<CartProdTile> {
               flex: 3,
               child: Card(
                 child: InkResponse(
+                  enableFeedback: true,
                   child: Icon(
                     Icons.add,
                     color: Colors.green,
                   ),
                   onTap: () {
-                    // setState(() {
-                    //   qty[widget.index]=qty[widget.index]+1;
-                    // });
+                    //print(docsPath[widget.index].path);
+                    String u =
+                        docsPath[widget.index].path.toString().substring(7, 35);
+                    String d = docsPath[widget.index]
+                        .path
+                        .toString()
+                        .substring(45, 65);
+                    String str = u + "-" + d;
+                    // print(u + "-" + d);
+
+                    Firestore.instance.runTransaction((tx) async {
+                      DocumentSnapshot snapshot =
+                          await tx.get(docsPath[widget.index]);
+
+                      if (snapshot.exists) {
+                        Map<String, dynamic> json = snapshot.data;
+                        print('type is :' +
+                            json['quantity'].runtimeType.toString());
+                        int q = int.parse(json['quantity']);
+                        //print('qty is:' + (q - 1).toString());
+                        if (q > 0 && quantity>=0) {
+                          q = q - 1;
+                          json['quantity'] = q.toString();
+
+                          await tx
+                              .update(docsPath[widget.index], json)
+                              .then((_) {
+                            print('success');
+                          }).catchError((e) {
+                            print('error');
+                          });
+                        } else {
+                          print('out of stock');
+                        }
+                      } else {
+                        // await tx.set(doc, json);
+                      }
+                      tx.update(documentReference, userData);
+                    }).then((v) {
+                      setState(() {
+                        qty[widget.index]++;
+                        quantity++;
+                        print(qty[widget.index]);
+
+                        userData['cart'][str] = quantity;
+
+                        // print(userData);
+                      });
+                    }).catchError((err) {
+                      print(err.toString());
+                    });
                   },
                 ),
               )
@@ -170,10 +220,10 @@ class _CartProdTile extends State<CartProdTile> {
               //   child: Icon(Icons.add),
               // ),
               ),
-          // Expanded(
-          //     flex: 1,
-          //     //  width: MediaQuery.of(context).size.width * 0.1,
-          //     child: Text(qty[widget.index].toString())),
+          Expanded(
+              flex: 4,
+              //  width: MediaQuery.of(context).size.width * 0.1,
+              child: Text(qty[widget.index].toString())),
           Expanded(
               flex: 3,
               // width: MediaQuery.of(context).size.width * 0.1,
@@ -184,10 +234,57 @@ class _CartProdTile extends State<CartProdTile> {
                     color: Colors.deepOrange,
                   ),
                   onTap: () {
-                    // setState(() {
-                    //   qty[widget.index]=qty[widget.index]-1;
-                    //   print(qty[widget.index]);
-                    // });
+                    String u =
+                        docsPath[widget.index].path.toString().substring(7, 35);
+                    String d = docsPath[widget.index]
+                        .path
+                        .toString()
+                        .substring(45, 65);
+                    String str = u + "-" + d;
+                    // print(u + "-" + d);
+
+                    Firestore.instance.runTransaction((tx) async {
+                      DocumentSnapshot snapshot =
+                          await tx.get(docsPath[widget.index]);
+
+                      if (snapshot.exists) {
+                        Map<String, dynamic> json = snapshot.data;
+                        print('type is :' +
+                            json['quantity'].runtimeType.toString());
+                        int q = int.parse(json['quantity']);
+                     //   print('qty is:' + (q + 1).toString());
+                        //reach max limit
+                        if (q >= 0 && quantity>0) {
+                          q = q + 1;
+                          json['quantity'] = q.toString();
+
+                          await tx
+                              .update(docsPath[widget.index], json)
+                              .then((_) {
+                            print('success');
+                          }).catchError((e) {
+                            print('error');
+                          });
+                        } else {
+                          print('out of stock');
+                        }
+                      } else {
+                        // await tx.set(doc, json);
+                      }
+                     await tx.update(documentReference, userData);
+                    }).then((v) {
+                      setState(() {
+                        qty[widget.index]--;
+                        quantity--;
+                        print(qty[widget.index]);
+
+                        userData['cart'][str] = quantity;
+
+                        // print(userData);
+                      });
+                    }).catchError((err) {
+                      print(err.toString());
+                    });
                   },
                 ),
               )

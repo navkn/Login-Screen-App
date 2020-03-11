@@ -36,5 +36,6 @@ Future<DocumentSnapshot> qsCart;
 List<Map<dynamic, dynamic>> cartProdData = List();
 Map<int,Uint8List> cartImages={};
 List<int> cartItemIndexes=List();
-List qty=List();
+List<dynamic> qty=List();
 List<DocumentSnapshot> cartDocs=List();
+List<DocumentReference> docsPath=List();

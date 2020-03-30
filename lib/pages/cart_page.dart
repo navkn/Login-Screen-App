@@ -42,13 +42,13 @@ class _CartPageState extends State<CartPage> {
     //      });
     //    }
     //  });
-    print('len is ' + cartDocs.length.toString());
+    //print('len is ' + cartDocs.length.toString());
     if (cartDocs.length == 0) {
-      print('cart data is' + userData['cart'].toString());
-      print(userData['cart'].runtimeType);
+      // print('cart data is' + userData['cart'].toString());
+      // print(userData['cart'].runtimeType);
 
       Map<dynamic, dynamic> l1 = userData['cart'];
-      print(l1.toString());
+      //print(l1.toString());
       Iterable<dynamic> k = l1.keys;
       List<dynamic> keys = k.toList();
       if (keys.length == 0) {
@@ -60,7 +60,7 @@ class _CartPageState extends State<CartPage> {
         //print(l1[keys[i].toString()]);
         String u = keys[i].substring(0, 28);
         String d = keys[i].substring(29, 49);
-        print(u + "-" + d);
+       // print(u + "-" + d);
 
         _doc = Firestore.instance.document('/users/' + u + '/products/' + d);
         
@@ -89,9 +89,9 @@ class _CartPageState extends State<CartPage> {
     // cartDocs.forEach((f) {
     //   cartProdData.add(f.data);
     // });
-    print("cartDocs:" + cartDocs.toString());
-    print("cartProdData:" + cartProdData.toString());
-    print('quantities are:' + qty.toString());
+    // print("cartDocs:" + cartDocs.toString());
+    // print("cartProdData:" + cartProdData.toString());
+    // print('quantities are:' + qty.toString());
     // _collectionReference =
     //     Firestore.instance.collection('/users/' + userId + '/products');
 //     if (querySnapshot == null)
@@ -175,7 +175,7 @@ class _CartPageState extends State<CartPage> {
       enable = true;
     });
     Map<dynamic, dynamic> l1 = userData['cart'];
-    print(l1.toString());
+    //print(l1.toString());
     Iterable<dynamic> k = l1.keys;
     List<dynamic> keys = k.toList();
     if (keys.length == 0) {
@@ -189,25 +189,25 @@ class _CartPageState extends State<CartPage> {
     cartItemIndexes = List();
     qty = List();
     docsPath=List();
-    print('len is ' + cartDocs.length.toString());
+    //print('len is ' + cartDocs.length.toString());
     //
     //  print('cart data is' + userData['cart'].toString());
     //  print(userData['cart'].runtimeType);
     return documentReference.get().then((DocumentSnapshot ds) {
-      print('entering into profilepage ' + ds.data.toString());
+      //print('entering into profilepage ' + ds.data.toString());
       ds.data.forEach((key, value) {
         userData[key] = value;
       });
-      print('out from profile page');
+      //print('out from profile page');
       Map<dynamic, dynamic> l1 = userData['cart'];
-      print(l1.toString());
+     // print(l1.toString());
       Iterable<dynamic> k = l1.keys;
       List<dynamic> keys = k.toList();
       for (var i = 0; i < keys.length; i++) {
         //print(l1[keys[i].toString()]);
         String u = keys[i].substring(0, 28);
         String d = keys[i].substring(29, 49);
-        print(u + "-" + d);
+       // print(u + "-" + d);
         _doc = Firestore.instance.document('/users/' + u + '/products/' + d);
         _doc.get().then((v) {
           cartDocs.add(v);

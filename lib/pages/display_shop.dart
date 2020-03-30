@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:login_screen_app/Model/usefulData.dart';
+import 'package:login_screen_app/pages/chat_page.dart';
 //import 'package:login_screen_app/pages/add_product.dart';
 import 'package:login_screen_app/pages/prod_tile.dart';
 //import 'package:login_screen_app/pages/product_grid_tile.dart';
@@ -23,7 +24,7 @@ class _DisplayShop extends State<DisplayShop> {
   @override
   void initState() {
     super.initState();
-    print("shopId:" + widget.uid);
+   // print("shopId:" + widget.uid);
     _collectionReference =
         Firestore.instance.collection('/users/' + widget.uid + '/products');
     if (widget.uid != prevShopId) {
@@ -34,10 +35,10 @@ class _DisplayShop extends State<DisplayShop> {
     }
     // if (querySnapshotq == null)
     querySnapshotq = _collectionReference.getDocuments();
-    print("firstInstance:" + firstInstanceq.toString());
-    print("firstInstance:" + listMapq.toString());
-    print("firstInstance:" + mapOfImagesq.toString());
-    print("firstInstance:" + indexesq.toString());
+    // print("firstInstance:" + firstInstanceq.toString());
+    // print("firstInstance:" + listMapq.toString());
+    // print("firstInstance:" + mapOfImagesq.toString());
+    // print("firstInstance:" + indexesq.toString());
 
     // WidgetsBinding.instance
     //     .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
@@ -45,7 +46,6 @@ class _DisplayShop extends State<DisplayShop> {
 
   @override
   void dispose() {
-    
     super.dispose();
     prevShopId = widget.uid;
   }
@@ -56,6 +56,7 @@ class _DisplayShop extends State<DisplayShop> {
       key: scaffoldkey,
       appBar: AppBar(
         title: Text('Products'),
+        actions: <Widget>[showChatIcon()],
       ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -86,20 +87,19 @@ class _DisplayShop extends State<DisplayShop> {
     if (firstInstanceq == false) {
       firstInstanceq = true;
       listOfDocumentsq = data.documents;
-      print("docs:" + listOfDocuments.toString());
+     // print("docs:" + listOfDocuments.toString());
       for (var doc in listOfDocumentsq) {
-       // Map<String, dynamic> map = doc.data;
+        // Map<String, dynamic> map = doc.data;
         //for (var key in map.keys) {
-          listMapq.add(doc.data);
-      //  }
+        listMapq.add(doc.data);
+        //  }
       }
     }
-    print("listMap:" + listMap.toString());
+   // print("listMap:" + listMap.toString());
 
     //  print(ls.toString());
     return GridView.builder(
       itemCount: listMapq.length,
-      
       gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount:
             (MediaQuery.of(context).orientation == Orientation.portrait)
@@ -124,5 +124,23 @@ class _DisplayShop extends State<DisplayShop> {
     }).catchError((e) {
       print(e);
     });
+  }
+
+  Widget showChatIcon() {
+    return Container(
+      child:  InkResponse(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext context) {
+               // print(140);
+                return ChatPage(widget.uid);
+              }));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.chat),
+            ),
+          ),
+    );
   }
 }

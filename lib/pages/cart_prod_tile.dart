@@ -21,14 +21,14 @@ class _CartProdTile extends State<CartProdTile> {
     super.initState();
     imageFile = null;
     quantity = qty[widget.index];
-    print('quantity is' + quantity.toString());
+   // print('quantity is' + quantity.toString());
     // qty[widget.index]=0;
     // print('ond:'+qty.elementAt(widget.index));
-    print('init state');
+    //print('init state');
     // print(indexes);
     // print(listMap);
-    print(cartProdData);
-    print(cartImages.keys);
+    //print(cartProdData);
+    //print(cartImages.keys);
     if (cartItemIndexes.contains(widget.index)) {
       setState(() {
         imageFile = cartImages[widget.index];
@@ -105,7 +105,7 @@ class _CartProdTile extends State<CartProdTile> {
         if (!cartImages.containsKey(index)) {
           cartImages[index] = val;
         }
-        print(cartImages.keys);
+        //print(cartImages.keys);
         cartItemIndexes.add(index);
         setState(() {
           imageFile = val;
@@ -123,7 +123,7 @@ class _CartProdTile extends State<CartProdTile> {
       );
       return response.bodyBytes;
     } catch (e) {
-      //    print(e);
+          print(e);
       throw e;
     }
   }
@@ -173,8 +173,8 @@ class _CartProdTile extends State<CartProdTile> {
 
                       if (snapshot.exists) {
                         Map<String, dynamic> json = snapshot.data;
-                        print('type is :' +
-                            json['quantity'].runtimeType.toString());
+                        // print('type is :' +
+                        //     json['quantity'].runtimeType.toString());
                         int q = int.parse(json['quantity']);
                         //print('qty is:' + (q - 1).toString());
                         if (q > 0 && quantity>=0) {
@@ -184,7 +184,7 @@ class _CartProdTile extends State<CartProdTile> {
                           await tx
                               .update(docsPath[widget.index], json)
                               .then((_) {
-                            print('success');
+                            //print('success');
                           }).catchError((e) {
                             print('error');
                           });
@@ -199,7 +199,7 @@ class _CartProdTile extends State<CartProdTile> {
                       setState(() {
                         qty[widget.index]++;
                         quantity++;
-                        print(qty[widget.index]);
+                       // print(qty[widget.index]);
 
                         userData['cart'][str] = quantity;
 
@@ -249,8 +249,8 @@ class _CartProdTile extends State<CartProdTile> {
 
                       if (snapshot.exists) {
                         Map<String, dynamic> json = snapshot.data;
-                        print('type is :' +
-                            json['quantity'].runtimeType.toString());
+                        // print('type is :' +
+                        //     json['quantity'].runtimeType.toString());
                         int q = int.parse(json['quantity']);
                      //   print('qty is:' + (q + 1).toString());
                         //reach max limit
@@ -276,7 +276,7 @@ class _CartProdTile extends State<CartProdTile> {
                       setState(() {
                         qty[widget.index]--;
                         quantity--;
-                        print(qty[widget.index]);
+                       // print(qty[widget.index]);
 
                         userData['cart'][str] = quantity;
 

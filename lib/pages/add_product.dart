@@ -36,7 +36,7 @@ class _AddProductState extends State<AddProduct> {
   void initState() {
     super.initState();
     // width = MediaQuery.of(context).size.width;
-    print(userData);
+    //print(userData);
     urlController.text = '';
     titleController.text = '';
     categoryController.text = '';
@@ -298,7 +298,7 @@ class _AddProductState extends State<AddProduct> {
     final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
     try {
       url = await downloadUrl.ref.getDownloadURL();
-      print('URL Is $url');
+     // print('URL Is $url');
       return;
     } catch (e) {
       throw e;

@@ -35,7 +35,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                print(140);
+               // print(140);
                 return CartPage();
               }));
             },

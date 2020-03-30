@@ -209,13 +209,13 @@ class _ProfilePageState extends State<ProfilePage> {
   void updateContent() async {
     final form1 = formKey1.currentState;
     final form2 = formKey2.currentState;
-    print(form2.toString() + ' form2');
+   // print(form2.toString() + ' form2');
     if (form1.validate() == false) return;
 
     if (form2 != null && form2.validate()) form2.save();
     form1.save();
 
-    print('updating');
+    //print('updating');
     Map<String, dynamic> upd = {
       'phoneNumber': phNumber,
       'userName': userName,
@@ -226,7 +226,7 @@ class _ProfilePageState extends State<ProfilePage> {
       'userId': userId,
       'profile': profile
     };
-    print('doc ref is ' + documentReference.toString());
+    //print('doc ref is ' + documentReference.toString());
 
     // Firestore.instance.runTransaction((t) {
     //    t.update(documentReference, upd).then((_) {
@@ -291,7 +291,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (e) {
       print(e);
 
-      print('doc ref is ' + documentReference.toString());
+      //print('doc ref is ' + documentReference.toString());
       showBar('update failed');
       //return;
       // throw e;
@@ -300,17 +300,17 @@ class _ProfilePageState extends State<ProfilePage> {
       Map<String, dynamic> data = {};
       pincodesReference =
           Firestore.instance.collection('pincodes').document('$pincode');
-      print(pincodesReference);
+     // print(pincodesReference);
       pincodesReference.get().then((ds) async {
         data = ds.data;
-        print(data);
+        //print(data);
         if (data.isEmpty) {
           data = {
             '$category': {
               '$userId': {'shop-name': '$businessName', 'images': []}
             }
           };
-          print(data);
+          //print(data);
           await pincodesReference.setData(data);
           showBar('business updated successfully');
         } else if (data.containsKey('$category')) {
@@ -319,16 +319,16 @@ class _ProfilePageState extends State<ProfilePage> {
             data['$category']
                 ['$userId'] = {'shop-name': '$businessName', 'images': []};
 
-            print(data);
+            //print(data);
           } else {
             Map<dynamic, dynamic> other = data['$category'];
             other.putIfAbsent('$userId', () {
               return {'shop-name': '$businessName', 'images': []};
             });
             data['$category'] = other;
-            print(other);
-            print(data['$category']);
-            print(data);
+            //print(other);
+            //print(data['$category']);
+            //print(data);
             // print(data['super market']);
             // print(data['super market']['3qnaFkY1TUisEalpKLxIaBMFil1']);
             // print(other);
@@ -339,7 +339,7 @@ class _ProfilePageState extends State<ProfilePage> {
               '$userId': {'shop-name': '$businessName', 'images': []}
             };
           });
-          print(data);
+          //print(data);
         }
         await pincodesReference.updateData(data);
         showBar('business updated successfully');
@@ -430,8 +430,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget showDynamicWidget() {
-    print('prof ' + currentProfile.toString());
-    print(profile);
+    //print('prof ' + currentProfile.toString());
+    //print(profile);
     if (currentProfile == false && profile == 'Buyer')
       return SizedBox(
         height: 0,

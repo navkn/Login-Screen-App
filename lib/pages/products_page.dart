@@ -26,7 +26,7 @@ class _ProductsPageState extends State<ProductsPage> {
         Firestore.instance.collection('/users/' + userId + '/products');
     if (querySnapshot == null)
       querySnapshot = _collectionReference.getDocuments();
-    print(querySnapshot);
+    //print(querySnapshot);
     // WidgetsBinding.instance
     //     .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
   }
@@ -78,7 +78,7 @@ class _ProductsPageState extends State<ProductsPage> {
     if (firstInstance == false) {
       firstInstance = true;
       listOfDocuments = data.documents;
-      print(listOfDocuments);
+      //print(listOfDocuments);
       for (var doc in listOfDocuments) {
         listMap.add(doc.data);
         // for (var key in map.keys) {

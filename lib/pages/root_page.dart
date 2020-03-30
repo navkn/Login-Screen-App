@@ -70,10 +70,10 @@ class _RootPage extends State<RootPage> {
   }
 
   void loginCallback() async {
-    print('inside logincallback');
+   // print('inside logincallback');
     //_currentProfile=currentProfile;
     if (userId == null) await widget.auth.getCurrentUser();
-    print('inside logincallback' + userId.toString());
+    //print('inside logincallback' + userId.toString());
     setState(() {
       print('inside login setting state');
       // userId = firebaseUser.uid.toString();

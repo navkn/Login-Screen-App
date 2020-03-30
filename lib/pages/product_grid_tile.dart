@@ -19,7 +19,7 @@ class _ProductGridTileState extends State<ProductGridTile> {
   void initState() {
     super.initState();
     imageFile = null;
-    print('init state');
+    //print('init state');
     // print(indexes);
     // print(listMap);
     print(mapOfImages.keys);
@@ -68,7 +68,7 @@ class _ProductGridTileState extends State<ProductGridTile> {
         if (!mapOfImages.containsKey(index)) {
           mapOfImages[index] = val;
         }
-        print(mapOfImages.keys);
+        //print(mapOfImages.keys);
         indexes.add(index);
         setState(() {
           imageFile = val;

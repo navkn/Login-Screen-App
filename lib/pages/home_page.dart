@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:login_screen_app/Model/usefulData.dart';
+import 'package:login_screen_app/pages/ListOfChats.dart';
 import 'package:login_screen_app/pages/cart_page.dart';
 import 'package:login_screen_app/pages/display_shop.dart';
 import 'package:login_screen_app/pages/products_page.dart';
@@ -40,8 +41,8 @@ class _HomePageState extends State<HomePage> {
     // print('home ' + currentProfile.toString());
     pincodeController.text = '600119';
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('height:' +
-          (MediaQuery.of(context).size.height - kToolbarHeight).toString());
+      //print('height:' +
+       //   (MediaQuery.of(context).size.height - kToolbarHeight).toString());
       documentReference.get().then((DocumentSnapshot ds) {
         documentSnapshot = ds;
         ds.data.forEach((key, value) {
@@ -124,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
-                          print(140);
+                          //print(140);
                           return ProductsPage();
                         }));
                       },
@@ -156,12 +157,27 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.grey,
                 thickness: 2,
               ),
+               new ListTile(
+                title: new Text('Chats', style: TextStyle(fontSize: 14)),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                   // print(140);
+                    return ListOfChats();
+                  }));
+                },
+              ),
+              new Divider(
+                color: Colors.grey,
+                thickness: 2,
+              ),
               new ListTile(
                 title: new Text('SignOut', style: TextStyle(fontSize: 14)),
                 onTap: () {
                   widget.logoutCallback();
                 },
               ),
+              
             ],
           ),
         ),

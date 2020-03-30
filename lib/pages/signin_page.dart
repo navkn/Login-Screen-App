@@ -39,7 +39,7 @@ class _SignInPageState extends State<SignInPage>
 
     _iconAnimation.addListener(() => this.setState(() {}));
     _iconAnimationController.forward();
-    print('sig ' + currentProfile.toString());
+   // print('sig ' + currentProfile.toString());
   }
 
   @override
@@ -202,7 +202,7 @@ class _SignInPageState extends State<SignInPage>
       children: <Widget>[
         Checkbox(
           onChanged: (value) {
-            print(currentProfile.toString() + 'checkbox');
+            //print(currentProfile.toString() + 'checkbox');
             setState(() {
               isChecked = value;
               currentProfile = value;
@@ -284,11 +284,11 @@ class _SignInPageState extends State<SignInPage>
 
   Future<void> login() async {
     // if (validateAndSave() == false) return;
-    print('inside signin login()');
+   // print('inside signin login()');
     try {
       return await widget.auth.signInWithEmailAndPassword(_email, _pwd);
     } on PlatformException catch (e) {
-      print(e);
+     // print(e);
       if (e.code == 'ERROR_WRONG_PASSWORD') showBar('WRONG_PASSWORD');
       if (e.code == 'ERROR_USER_NOT_FOUND') showBar('USER NOT FOUND');
       if (e.code == 'ERROR_INVALID_EMAIL') showBar('INVALID EMAIL');
@@ -324,7 +324,7 @@ class _SignInPageState extends State<SignInPage>
   }
 
   void validateAndSignInWithGoogle() async {
-    print('inside login with google');
+   // print('inside login with google');
     try {
       await widget.auth.signInWithGoogle();
     } on PlatformException catch (e) {
@@ -348,7 +348,7 @@ class _SignInPageState extends State<SignInPage>
       return;
     }
     if (userId != null) {
-      print('4');
+     // print('4');
       widget.loginCallback();
     } else {
       print('userId is null');
@@ -367,7 +367,7 @@ class _SignInPageState extends State<SignInPage>
     if (firebaseUser == null) {
       throw Exception;
     }
-    print('creating user profile');
+   // print('creating user profile');
     Map<String, dynamic> data = {
       'userId': '${firebaseUser.uid}',
       'userName': '${firebaseUser.displayName}',
@@ -394,7 +394,7 @@ class _SignInPageState extends State<SignInPage>
     }
 
     if (documentSnapshot.exists == false) {
-      print('doc doesnot exists');
+     // print('doc doesnot exists');
       // try {
       //   await documentReference.updateData({
       //     'currentProfile': isChecked == true ? 'Seller' : 'Buyer',
@@ -408,7 +408,7 @@ class _SignInPageState extends State<SignInPage>
       // }
       try {
         await documentReference.setData(data);
-        print('profile creation success');
+       // print('profile creation success');
         return;
       } catch (e) {
         print('unable to set profile data');
